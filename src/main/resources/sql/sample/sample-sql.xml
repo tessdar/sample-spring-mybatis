@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.SampleMapper">
+	<select id="getEmpList" parameterType="Long" resultType="EmpListVo">
+		<![CDATA[
+	    SELECT A.EMPLOYEE_ID,
+	           A.COMMISSION_PCT,
+	           A.DEPARTMENT_ID,
+	           A.EMAIL,
+	           A.FIRST_NAME,
+	           A.JOB_ID,
+	           A.LAST_NAME,
+	           A.PHONE_NUMBER,
+	           A.SALARY,
+	           A.MANAGER_ID,
+	           A.HIRE_DATE,
+	           B.DEPARTMENT_NAME,
+	           B.LOCATION_ID
+	      FROM EMPLOYEES A,
+	           DEPARTMENTS B
+	     WHERE A.DEPARTMENT_ID = B.DEPARTMENT_ID
+	       AND A.DEPARTMENT_ID = #{departmentId}
+	    ]]>
+	</select>
+
+	<update id="setEmp" parameterType="EmpSaveVo">
+	    <![CDATA[
+	    UPDATE EMPLOYEES
+	       SET FIRST_NAME = #{firstName},
+	           LAST_NAME = #{lastName},
+	           PHONE_NUMBER = #{phoneNumber},
+	           JOB_ID = #{jobId},
+	           DEPARTMENT_ID = #{departmentId},
+	           MANAGER_ID = #{managerId},
+	           EMAIL = #{email}      
+	     WHERE EMPLOYEE_ID = #{employeeId}
+	    ]]>
+	</update>
+
+	<delete id="delEmp" parameterType="Long">
+		<![CDATA[ 
+		DELETE FROM EMPLOYEES 
+		 WHERE EMPLOYEE_ID = #{employeeId} 
+		]]>
+	</delete>
+
+	<insert id="insEmp" parameterType="EmpSaveVo">
+	    <![CDATA[
+		INSERT INTO EMPLOYEES (EMPLOYEE_ID, FIRST_NAME, LAST_NAME, PHONE_NUMBER, JOB_ID, DEPARTMENT_ID, MANAGER_ID, EMAIL, HIRE_DATE) 
+	         VALUES (#{employeeId}, #{firstName}, #{lastName}, #{phoneNumber}, #{jobId}, #{departmentId}, #{managerId}, #{email}, now())
+	    ]]>
+	</insert>
+
+	<select id="getDepList" resultType="DepListVo">
+		<![CDATA[
+		SELECT DEPARTMENT_ID,
+		       DEPARTMENT_NAME,
+		       MANAGER_ID,
+		       LOCATION_ID
+		  FROM DEPARTMENTS
+	    ]]>
+	</select>
+
+	<select id="getJobList" resultType="JobListVo">
+		<![CDATA[
+		SELECT JOB_ID,
+		       JOB_TITLE,
+		       MIN_SALARY,
+		       MAX_SALARY
+		  FROM JOBS
+	    ]]>
+	</select>
+
+	<select id="getDepChart" resultType="DepChartVo">
+		<![CDATA[
+		SELECT A2.DEPARTMENT_ID, 
+		       A2.DEPARTMENT_NAME, 
+		       SUM(DEP_CNT) AS DEP_CNT
+		  FROM (SELECT CASE WHEN RANK() OVER(ORDER BY DEP_CNT DESC) < 5 THEN
+		                A1.DEPARTMENT_ID
+		               ELSE
+		                999
+		               END AS DEPARTMENT_ID,
+		               CASE WHEN RANK() OVER(ORDER BY DEP_CNT DESC) < 5 THEN
+		                A1.DEPARTMENT_NAME
+		               ELSE
+		                'Etc'
+		               END AS DEPARTMENT_NAME,
+		               A1.DEP_CNT
+		          FROM (SELECT A.DEPARTMENT_ID, 
+		                       B.DEPARTMENT_NAME, 
+		                       COUNT(1) DEP_CNT
+		                  FROM EMPLOYEES A,
+		                       DEPARTMENTS B
+		                 WHERE A.DEPARTMENT_ID = B.DEPARTMENT_ID      
+		                 GROUP BY A.DEPARTMENT_ID, B.DEPARTMENT_NAME
+		                 ORDER BY 3 DESC ) AS A1 ) AS A2
+		GROUP BY A2.DEPARTMENT_ID, A2.DEPARTMENT_NAME 
+	    ]]>
+	</select>
+
+	<select id="getJobChart" resultType="JobChartVo">
+		<![CDATA[
+		SELECT A2.JOB_ID, 
+		       A2.JOB_TITLE, 
+		       SUM(JOB_CNT) AS JOB_CNT
+		  FROM (SELECT CASE WHEN RANK() OVER(ORDER BY JOB_CNT DESC) < 3 THEN
+		                A1.JOB_ID
+		               ELSE
+		                'ETC'
+		               END AS JOB_ID,
+		               CASE WHEN RANK() OVER(ORDER BY JOB_CNT DESC) < 3 THEN
+		                A1.JOB_TITLE
+		               ELSE
+		                'Etc'
+		               END AS JOB_TITLE,
+		               A1.JOB_CNT
+		          FROM (SELECT A.JOB_ID, 
+		                       B.JOB_TITLE, 
+		                       COUNT(1) JOB_CNT
+		                  FROM EMPLOYEES A,
+		                       JOBS B
+		                 WHERE A.JOB_ID = B.JOB_ID      
+		                 GROUP BY A.JOB_ID, B.JOB_TITLE
+		                 ORDER BY 3 DESC ) AS A1 ) AS A2
+		GROUP BY A2.JOB_ID, A2.JOB_TITLE
+	    ]]>
+	</select>
+
+</mapper>

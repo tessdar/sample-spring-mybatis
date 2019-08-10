@@ -1,0 +1,9 @@
+INFO:
+  SAVE: "Saved successfully."
+  DEL: "Deleted successfully."
+  INS: "Inserted successfully."
+  OK: "Processed successfully."
+ERR:
+  SAVE: "Error occurred while saving data."
+  DEL: "Error occurred while deleting data."
+  INS: "Error occurred while inserting data."
