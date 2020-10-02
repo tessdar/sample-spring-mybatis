@@ -20,7 +20,7 @@ public class JwtManager {
 	public String createToken() {
 		String token = null;
 		
-		final String issuer = "RSM";
+		final String issuer = "Sample";
 		Date issuedAt = new Date(); 
 		
 		Calendar c = Calendar.getInstance();

@@ -3,7 +3,8 @@ spring:
     active: dev
   messages:
     basename: i18n/message
-    encoding: UTF-8    
+    encoding: UTF-8   
+     
 logging:
   level:
     org:
@@ -13,12 +14,14 @@ logging:
       example: DEBUG
   pattern:
     console: "%d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n"
+    
 mybatis:
   mapper-locations: classpath:/sql/sample/*.xml
   configuration.map-underscore-to-camel-case: true
   type-aliases-package: com.example.vo
+  
 server:
-  port: ${PORT:5000}
+  port: ${PORT:5100}
 
 ---
   
