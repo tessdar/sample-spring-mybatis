@@ -5,12 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
+import org.springframework.web.servlet.HandlerInterceptor;
 import com.common.security.JwtManager;
 
 @Component
-public class LoginCheck extends HandlerInterceptorAdapter {
+public class LoginCheck implements HandlerInterceptor {
 
 	@Autowired
 	private JwtManager jwtManager;

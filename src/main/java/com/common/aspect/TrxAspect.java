@@ -9,12 +9,11 @@ import org.springframework.aop.support.DefaultPointcutAdvisor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionManager;
 import org.springframework.transaction.interceptor.MatchAlwaysTransactionAttributeSource;
 import org.springframework.transaction.interceptor.RollbackRuleAttribute;
 import org.springframework.transaction.interceptor.RuleBasedTransactionAttribute;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-
 
 @Configuration
 @Aspect
@@ -23,7 +22,7 @@ public class TrxAspect {
 	private static final String AOP_POINTCUT_EXPRESSION = "execution(* com.example.service.*Service.*(..))";
 
 	@Autowired
-	private PlatformTransactionManager transactionManager;
+	private TransactionManager transactionManager;
 
 	@Bean
 	public TransactionInterceptor txAdvice() {

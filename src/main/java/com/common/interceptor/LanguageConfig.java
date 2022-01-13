@@ -5,12 +5,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
+import org.springframework.web.servlet.HandlerInterceptor;
 import com.common.util.MessageTrans;
 
 @Component
-public class LanguageConfig extends HandlerInterceptorAdapter {
+public class LanguageConfig implements HandlerInterceptor {
 
 	@Autowired
 	private MessageTrans messageTrans;

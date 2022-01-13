@@ -26,13 +26,13 @@ import com.example.vo.JobListVo;
 public class SampleServiceImpl implements SampleService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SampleServiceImpl.class);
-	
+
 	@Autowired
 	private SampleMapper sampleMapper;
 
 	/**
-	 * Cache Refresh 
-	 * 매일 새벽 3시에 실행 
+	 * Cache Refresh
+	 * 매일 새벽 3시에 실행
 	 */
 	@Override
 	@CacheEvict(value = { "DepList", "JobList" })
@@ -40,7 +40,7 @@ public class SampleServiceImpl implements SampleService {
 	public void scheRefreshCache() {
 		logger.debug("Execute scheRefreshCache");
 	}
-	
+
 	@Override
 	public List<EmpListVo> getEmpList(Long departmentId) {
 		return sampleMapper.getEmpList(departmentId);
@@ -48,11 +48,8 @@ public class SampleServiceImpl implements SampleService {
 
 	@Override
 	public String setEmp(List<EmpSaveVo> vos) throws Exception {
-
 		try {
-
 			for (EmpSaveVo vo : vos) {
-
 				if (vo.get_status() == Status.Delete.getStatus()) {
 
 					int delCnt = sampleMapper.delEmp(vo.getEmployeeId());
@@ -63,21 +60,19 @@ public class SampleServiceImpl implements SampleService {
 
 				} else if (vo.get_status() == Status.New.getStatus()) {
 					int insCnt = sampleMapper.insEmp(vo);
-					
+
 					if (insCnt < 1) {
 						throw new Exception("Error: sampleMapper.insEmp");
 					}
 
 				} else if (vo.get_status() == Status.Modified.getStatus()) {
 					int setCnt = sampleMapper.setEmp(vo);
-					
+
 					if (setCnt < 1) {
 						throw new Exception("Error: sampleMapper.setEmp");
 					}
 				}
-
 			}
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			throw new Exception(MessageProp.ERR_SAVE.getMsg());
@@ -87,13 +82,13 @@ public class SampleServiceImpl implements SampleService {
 	}
 
 	@Override
-	@Cacheable(value="DepList")
+	@Cacheable(value = "DepList")
 	public List<DepListVo> getDepList() {
 		return sampleMapper.getDepList();
 	}
 
 	@Override
-	@Cacheable(value="JobList")
+	@Cacheable(value = "JobList")
 	public List<JobListVo> getJobList() {
 		return sampleMapper.getJobList();
 	}

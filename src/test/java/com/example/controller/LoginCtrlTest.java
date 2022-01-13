@@ -1,20 +1,22 @@
 package com.example.controller;
 
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +28,6 @@ import com.common.util.MessageReturn;
 import com.example.vo.LoginVo;
 import com.google.gson.Gson;
 
-@RunWith(MockitoJUnitRunner.class)
 public class LoginCtrlTest {
 
 	private MockMvc mockMvc;
@@ -40,9 +41,9 @@ public class LoginCtrlTest {
 	@InjectMocks
 	private LoginCtrl loginCtrl;
 
-	@Before
+	@BeforeEach
 	public void setup() {
-		MockitoAnnotations.initMocks(this);
+		MockitoAnnotations.openMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(loginCtrl).build();
 	}
 
@@ -51,16 +52,17 @@ public class LoginCtrlTest {
 		LoginVo login = new LoginVo();
 		login.setUserId("admin");
 		login.setPassword("1234");
-		
+
 		Gson gson = new Gson();
 		String element = gson.toJson(login);
-		
+
 		Map<String, Object> result = new HashMap<>();
 		result.put("authToken", "Bearer 12345");
 		result.put("isFalse", false);
 
 		when(messageReturn.getRestResp(any(), anyString()))
 				.thenReturn(new ResponseEntity<Map<String, Object>>(result, HttpStatus.OK));
+
 		mockMvc.perform(post("/api/auth/login")
 				.content(element)
 				.contentType(MediaType.APPLICATION_JSON)).andDo(print()).andExpect(status().isOk());

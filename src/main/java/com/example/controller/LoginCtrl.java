@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.common.security.JwtManager;
 import com.common.util.MessageReturn;
 import com.example.vo.LoginVo;
 
+@Tag(name = "Login", description = "Login")
 @RestController
 @RequestMapping("/api/auth")
 public class LoginCtrl {
@@ -28,6 +32,7 @@ public class LoginCtrl {
 	@Autowired
 	private MessageReturn messageReturn;
 
+	@Operation(summary = "Login", description = "Login")
 	@PostMapping(path = "/login", consumes = "application/json")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> login(@RequestBody LoginVo vo) {
